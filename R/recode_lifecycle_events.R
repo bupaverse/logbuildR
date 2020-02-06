@@ -21,7 +21,7 @@ recode_lifecycles_events <- function(construction_object) {
         gadgetTitleBar("Recode lifecycle column"),
         miniContentPanel(
             uiOutput("recode"),
-            dataTableOutput("data")
+            tableOutput("data")
         )
     )
 

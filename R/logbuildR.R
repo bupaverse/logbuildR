@@ -8,6 +8,7 @@
 #' @import miniUI
 #' @import shiny
 #' @import dplyr
+#' @import bupaR
 
 
 

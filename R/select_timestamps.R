@@ -13,7 +13,7 @@ select_timestamps <- function(construction_object, single) {
         gadgetTitleBar(ifelse(single, "Select timestamp", "Select timestamps")),
         miniContentPanel(
             uiOutput("selection"),
-            dataTableOutput("data")
+            tableOutput("data")
         )
     )
 
@@ -37,7 +37,7 @@ select_timestamps <- function(construction_object, single) {
             }
         })
 
-        output$data <- renderDataTable(construction_object$data)
+        output$data <- renderTable(construction_object$data)
 
         observeEvent(input$done, {
             construction_object$timestamps <- input$timestamp

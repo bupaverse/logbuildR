@@ -15,14 +15,14 @@ select_lifecycle <- function(construction_object) {
             radioButtons("is_available", "Lifecycle column available?", choices = c("No, set lifecycle to 'complete' for all events" = "no",
                                                                                     "Yes, lifecycle column is available" = "yes"), selected = "no"),
             uiOutput("selection"),
-            dataTableOutput("data")
+            tableOutput("data")
         )
     )
 
 
     server <- function(input, output, session){
 
-        output$data <- renderDataTable(construction_object$data)
+        output$data <- renderTable(construction_object$data)
 
         output$selection <- renderUI({
             if(input$is_available == "yes"){

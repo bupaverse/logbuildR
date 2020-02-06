@@ -15,14 +15,14 @@ select_activity_instance <- function(construction_object) {
             radioButtons("is_available", "Activity instance id available?", choices = c("No, guess activity instance id" = "no",
                                                                                     "Yes, activity instance id column is available" = "yes"), selected = "no"),
             uiOutput("selection"),
-            dataTableOutput("data")
+            tableOutput("data")
         )
     )
 
 
     server <- function(input, output, session){
 
-        output$data <- renderDataTable(construction_object$data)
+        output$data <- renderTable(construction_object$data)
 
         output$selection <- renderUI({
             if(input$is_available == "yes"){

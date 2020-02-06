@@ -28,14 +28,14 @@ prepare_timestamps <- function(construction_object) {
                                        "dmy_hms", "dmy_hm", "dmy_h", "dmy",
                                        "mdy_hms", "mdy_hm", "mdy_h", "mdy"),
                            multiple = F),
-            dataTableOutput("data")
+            tableOutput("data")
         )
     )
 
 
     server <- function(input, output, session){
 
-        output$data <- renderDataTable(timestamp_data)
+        output$data <- renderTable(timestamp_data)
 
         observeEvent(input$done, {
             construction_object$data <- mutate_at(construction_object$data, not_timestamps, match.fun(input$format))

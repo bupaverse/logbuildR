@@ -20,9 +20,8 @@ recode_lifecycles_activities <- function(construction_object) {
     ui <- miniPage(
         gadgetTitleBar("Recode timestamp columns"),
         miniContentPanel(
-            uiOutput("recode"),
-            dataTableOutput("data")
-        )
+            uiOutput("recode")
+            )
     )
 
 

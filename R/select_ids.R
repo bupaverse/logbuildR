@@ -15,14 +15,14 @@ select_ids <- function(data) {
                 column(width = 4, selectInput("activity_id", label = "Activity identifier(s):", choices = names(data), multiple = T)),
                 column(width = 4, selectInput("resource_id", label = "Resource identifier(s):", choices = names(data), multiple = T))
             ),
-            dataTableOutput("data")
+            tableOutput("data")
         )
     )
 
 
     server <- function(input, output, session){
 
-        output$data <- renderDataTable(data)
+        output$data <- renderTable(data)
 
         observeEvent(input$done, {
             .construction_object <<- list(data = data, case_id = input$case_id,

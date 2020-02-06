@@ -11,7 +11,7 @@ decide_type <- function(construction_object) {
         gadgetTitleBar("Activities or events"),
         miniContentPanel(
             radioButtons(width = "100%", "choice", "Is each row in the data an event, or an activity instance?", choices = c("Event", "Activity")),
-            dataTableOutput("data")
+            tableOutput("data")
         )
      )
 
@@ -19,7 +19,7 @@ decide_type <- function(construction_object) {
     server <- function(input, output, session){
 
 
-        output$data <- renderDataTable(construction_object$data)
+        output$data <- renderTable(construction_object$data)
 
         observeEvent(input$done, {
             construction_object$type <- input$choice

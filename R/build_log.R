@@ -11,7 +11,7 @@ build_log <- function() {
         gadgetTitleBar("Select data"),
         miniContentPanel(
             uiOutput("datasets"),
-            dataTableOutput("data")
+            tableOutput("data")
 
         )
     )
@@ -24,7 +24,7 @@ build_log <- function() {
 
     server <- function(input, output, session){
 
-        output$data <- renderDataTable({
+        output$data <- renderTable({
             get(input$dataset)
         })
 
@@ -38,7 +38,6 @@ build_log <- function() {
 
             stopApp()
             rstudioapi::sendToConsole(glue::glue("select_ids(({input$dataset}))"))
-            #	select_case_id(get(input$dataset))
         })
     }
     runGadget(ui, server, viewer = dialogViewer("Event log construction",  height = 600, width = 850))
