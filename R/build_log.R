@@ -8,10 +8,10 @@
 build_log <- function() {
 
     ui <- miniPage(
-        gadgetTitleBar("Select data"),
+        gadgetTitleBar("Select data",right = miniTitleBarButton("done","Select data", TRUE)),
         miniContentPanel(
             uiOutput("datasets"),
-            tableOutput("data")
+            verbatimTextOutput("data")
 
         )
     )
@@ -24,23 +24,27 @@ build_log <- function() {
 
     server <- function(input, output, session){
 
-        output$data <- renderTable({
-            get(input$dataset)
-        })
-
         output$datasets <- renderUI({
             selectizeInput("dataset", label = "Select data:",
                            choices = datasets,
                            multiple = FALSE)
         })
 
+         output$data <- renderPrint({
+             if(is.null(input$dataset)) {
+                 tibble()
+             } else {
+                 glimpse(get(input$dataset))
+             }
+         })
+
         observeEvent(input$done, {
 
             stopApp()
-            rstudioapi::sendToConsole(glue::glue("select_ids(({input$dataset}))"))
+            rstudioapi::sendToConsole(glue::glue("select_ids({input$dataset})"))
         })
     }
-    runGadget(ui, server, viewer = dialogViewer("Event log construction",  height = 600, width = 850))
+    suppressWarnings(suppressMessages(runGadget(ui, server, viewer = dialogViewer("Event log construction",  height = 600, width = 850))))
 
 }
 

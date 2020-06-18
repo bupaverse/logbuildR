@@ -3,7 +3,6 @@
 \docType{package}
 \name{logbuildR}
 \alias{logbuildR}
-\alias{logbuildR-package}
 \title{logbuildR}
 \description{
 Ipsem lorum dorum

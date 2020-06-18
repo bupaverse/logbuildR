@@ -9,6 +9,7 @@
 #' @import shiny
 #' @import dplyr
 #' @import bupaR
+#' @import stringr
 
 
 
