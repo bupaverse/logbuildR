@@ -15,14 +15,14 @@ select_activity_instance <- function(construction_object) {
             radioButtons("is_available", "Activity instance id available?", choices = c("No, guess activity instance id" = "no",
                                                                                     "Yes, activity instance id column is available" = "yes"), selected = "no"),
             uiOutput("selection"),
-            tableOutput("data")
+            verbatimTextOutput("data")
         )
     )
 
 
     server <- function(input, output, session){
 
-        output$data <- renderTable(construction_object$data)
+        output$data <- renderPrint(construction_object$data %>% glimpse())
 
         output$selection <- renderUI({
             if(input$is_available == "yes"){
@@ -35,6 +35,7 @@ select_activity_instance <- function(construction_object) {
 
             if(input$is_available == "yes") {
                 construction_object$activity_instance_id <- input$selected_column
+                construction_object$guess_activity_instance_id <- F
                 rstudioapi::sendToConsole(glue::glue("save_log(.construction_object)"))
             } else {
                 construction_object$data <- assign_instance_id(construction_object$data,
@@ -42,7 +43,7 @@ select_activity_instance <- function(construction_object) {
                                                                construction_object$activity_id,
                                                                construction_object$timestamps,
                                                                construction_object$lifecycle_id)
-
+                construction_object$guess_activity_instance_id <- T
                 construction_object$activity_instance_id <- "activity_instance_logbuildR"
                 rstudioapi::sendToConsole(glue::glue("save_log(.construction_object)"))
             }

@@ -13,12 +13,14 @@ select_timestamps <- function(construction_object, single) {
         gadgetTitleBar(ifelse(single, "Select timestamp", "Select timestamps")),
         miniContentPanel(
             uiOutput("selection"),
-            tableOutput("data")
+            verbatimTextOutput("data")
         )
     )
 
 
     server <- function(input, output, session){
+
+        output$data <- renderPrint(construction_object$data %>% glimpse())
 
         timestamps <- names(construction_object$data)[unlist(map(map(construction_object$data, class), ~any(.x %in% c("POSIXct","Date"))))]
 
@@ -33,11 +35,10 @@ select_timestamps <- function(construction_object, single) {
                 selectInput("timestamp", "The following columns are timestamps:",
                                choices = names(construction_object$data),
                                multiple = T,
-                               selected = ifelse(length(timestamps)>0, timestamps, NA))
+                               selected = timestamps)
             }
         })
 
-        output$data <- renderTable(construction_object$data)
 
         observeEvent(input$done, {
             construction_object$timestamps <- input$timestamp

@@ -39,7 +39,12 @@ recode_lifecycles_activities <- function(construction_object) {
             for(i in 1:length(incorrect_lifecycles)) {
                 colnames(construction_object$data)[colnames(construction_object$data) == incorrect_lifecycles[i]] <- input[[paste0("recode", i)]]
                 construction_object$timestamps[construction_object$timestamps == incorrect_lifecycles[i]] <- input[[paste0("recode", i)]]
+                construction_object$lifecycle_to_recode[i] <- incorrect_lifecycles[i]
+                construction_object$lifecycle_recode_to[i] <- input[[paste0("recode",i)]]
+
             }
+
+
 
             .construction_object <<- construction_object
 

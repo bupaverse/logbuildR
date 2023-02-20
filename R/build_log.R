@@ -39,9 +39,9 @@ build_log <- function() {
          })
 
         observeEvent(input$done, {
-
+            .construction_object <<- list(data = get(input$dataset), data_name = input$dataset)
             stopApp()
-            rstudioapi::sendToConsole(glue::glue("select_ids({input$dataset})"))
+            rstudioapi::sendToConsole(glue::glue("select_ids(.construction_object)"))
         })
     }
     suppressWarnings(suppressMessages(runGadget(ui, server, viewer = dialogViewer("Event log construction",  height = 600, width = 850))))

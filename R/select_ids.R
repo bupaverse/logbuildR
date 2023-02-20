@@ -5,7 +5,7 @@
 #'
 #' @export
 #'
-select_ids <- function(data) {
+select_ids <- function(construction_object) {
 
     ui <- miniPage(
         gadgetTitleBar("Select case, activity and resource identifier"),
@@ -13,13 +13,13 @@ select_ids <- function(data) {
             h4("Select"),
             (fluidRow(
                 column(width = 4,
-                       selectInput("case_id", label = "Case identifier(s):", choices = names(data), multiple = T)
+                       selectInput("case_id", label = "Case identifier(s):", choices = names(construction_object$data), multiple = T)
                        ),
                 column(width = 4,
-                       selectInput("activity_id", label = "Activity identifier(s):", choices = names(data), multiple = T)
+                       selectInput("activity_id", label = "Activity identifier(s):", choices = names(construction_object$data), multiple = T)
                       ),
                 column(width = 4,
-                       selectInput("resource_id", label = "Resource identifier(s):", choices = names(data), multiple = T)
+                       selectInput("resource_id", label = "Resource identifier(s):", choices = names(construction_object$data), multiple = T)
                        )
             )),
             wellPanel(fluidRow(
@@ -46,13 +46,13 @@ select_ids <- function(data) {
 
     server <- function(input, output, session){
 
-        output$data <- renderPrint(data %>% glimpse())
+        output$data <- renderPrint(construction_object$data %>% glimpse())
 
         output$case_id_info <- renderText({
             if(is.null(input$case_id)) {
                 ""
             } else {
-            case_ids <- data[input$case_id] %>%
+            case_ids <- construction_object$data[input$case_id] %>%
                 as.data.frame() %>%
                 unique() %>%
                 unite(case_id, 1:ncol(.))
@@ -66,7 +66,7 @@ select_ids <- function(data) {
             if(is.null(input$case_id)) {
                 ""
             } else {
-                case_ids <- data[input$case_id] %>%
+                case_ids <- construction_object$data[input$case_id] %>%
                     as.data.frame() %>%
                     unique() %>%
                     unite(case_id, 1:ncol(.))
@@ -88,7 +88,7 @@ select_ids <- function(data) {
             if(is.null(input$activity_id)) {
                 ""
             } else {
-                activity_ids <- data[input$activity_id] %>%
+                activity_ids <- construction_object$data[input$activity_id] %>%
                     as.data.frame() %>%
                     unique() %>%
                     unite(activity_id, 1:ncol(.))
@@ -103,7 +103,7 @@ select_ids <- function(data) {
             if(is.null(input$activity_id)) {
                 ""
             } else {
-                activity_ids <- data[input$activity_id] %>%
+                activity_ids <- construction_object$data[input$activity_id] %>%
                     as.data.frame() %>%
                     unique() %>%
                     unite(activity_id, 1:ncol(.))
@@ -123,7 +123,7 @@ select_ids <- function(data) {
             if(is.null(input$resource_id)) {
                 ""
             } else {
-                resource_ids <- data[input$resource_id] %>%
+                resource_ids <- construction_object$data[input$resource_id] %>%
                     as.data.frame() %>%
                     unique() %>%
                     unite(resource_id, 1:ncol(.))
@@ -137,7 +137,7 @@ select_ids <- function(data) {
             if(is.null(input$resource_id)) {
                 ""
             } else {
-                resource_ids <- data[input$resource_id] %>%
+                resource_ids <- construction_object$data[input$resource_id] %>%
                     as.data.frame() %>%
                     unique() %>%
                     unite(resource_id, 1:ncol(.))
@@ -154,16 +154,29 @@ select_ids <- function(data) {
 
 
         output$checks <- renderText({
-            if(input$activity_id == input$case_id) {
-                "Case identifier should be different from activity identifier"
+            if(is.null(input$case_id)) {
+                stop("No case identifier selected")
+            } else if(is.null(input$activity_id)) {
+                stop("No activity identifier selected")
+            } else if(is.null(input$resource_id)) {
+                stop("No resource_id identifier selected")
+            } else if(input$activity_id == input$case_id) {
+                stop("Case identifier should be different from activity identifier")
+            } else if(input$resource_id == input$case_id) {
+                stop("Case identifier should be different from resource identifier")
+            } else if(input$activity_id == input$resource_id) {
+                stop("Resource identifier should be different from activity identifier")
             }
         })
 
         observeEvent(input$done, {
 
-            .construction_object <<- list(data = data, case_id = input$case_id,
-                                          activity_id = input$activity_id,
-                                          resource_id = input$resource_id)
+            construction_object$case_id = input$case_id
+            construction_object$activity_id = input$activity_id
+            construction_object$resource_id = input$resource_id
+
+            .construction_object <<- construction_object
+
             rstudioapi::sendToConsole(glue::glue("decide_type(.construction_object)"))
             stopApp()
         })

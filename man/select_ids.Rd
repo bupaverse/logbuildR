@@ -4,7 +4,7 @@
 \alias{select_ids}
 \title{Title}
 \usage{
-select_ids(data)
+select_ids(construction_object)
 }
 \arguments{
 \item{data}{}

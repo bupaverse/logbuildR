@@ -9,17 +9,35 @@ decide_type <- function(construction_object) {
 
     ui <- miniPage(
         gadgetTitleBar("Activities or events"),
+
+
+
         miniContentPanel(
-            radioButtons(width = "100%", "choice", "Is each row in the data an event, or an activity instance?", choices = c("Event", "Activity")),
-            tableOutput("data")
+            fluidRow(column(width = 6,
+            radioButtons(width = "100%", "choice", "Is each row in the data an event, or an activity instance?",
+                         choices = c( "Event - one relevant timestamp for each row" = "Event",
+                                      "Activity - multiple relevant timestamps for each row" = "Activity"))),
+            column(width = 6,
+            HTML("<b>Possible timestamps</b><br/>"),
+            htmlOutput("possible_timestamps"))),
+            verbatimTextOutput("data")
         )
      )
 
 
     server <- function(input, output, session){
 
+        output$possible_timestamps <- renderUI({
+            timestamps <- names(construction_object$data)[unlist(map(map(construction_object$data, class),
+                                                                     ~any(.x %in% c("POSIXct","Date"))))]
+            if(length(timestamps) > 0) {
+                HTML(paste(c(timestamps,"<br/>"), collapse = "<br/>"))
+            } else {
+                HTML("No timestamp variables found.<br/>")
+            }
+        })
 
-        output$data <- renderTable(construction_object$data)
+        output$data <- renderPrint(construction_object$data %>% glimpse())
 
         observeEvent(input$done, {
             construction_object$type <- input$choice

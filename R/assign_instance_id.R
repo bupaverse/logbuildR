@@ -18,17 +18,17 @@ assign_instance_id <- function(eventlog, case_id, activity_id, timestamp, lifecy
 
     current_instance <- NULL
 
-    status <- list(open_instances = c(), last_instance = 0)
+    current_status <- list(open_instances = c(), last_instance = 0)
 
     eventlog %>%
         group_by(!!sym(case_id), !!sym(activity_id)) %>%
         arrange(!!sym(timestamp)) %>%
-        mutate(status = accumulate(!!sym(lifecycle_id), assign_instance_id_EVENT, .init = status)[-1]) %>%
-        mutate(current_instance = map_dbl(status, ~.x$current_instance)) %>%
-        select(-status) %>%
+        mutate(ACTIVITY_STATUS_LOGBUILDR = accumulate(!!sym(lifecycle_id), assign_instance_id_EVENT, .init = current_status)[-1]) %>%
+        mutate(current_instance = map_dbl(ACTIVITY_STATUS_LOGBUILDR, ~.x$current_instance)) %>%
+        select(-ACTIVITY_STATUS_LOGBUILDR) %>%
         mutate(activity_instance_logbuildR = str_c(!!sym(case_id), !!sym(activity_id), current_instance, sep = "-")) %>%
         ungroup() %>%
-        tbl_df()
+        as_tibble()
 }
 
 

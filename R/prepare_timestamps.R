@@ -18,7 +18,7 @@ prepare_timestamps <- function(construction_object) {
 
     not_timestamps <- timestamps[!are_timestamps]
 
-    timestamp_data <- select(timestamp_data, not_timestamps)
+    timestamp_data <- select(timestamp_data, not_timestamps) %>% slice(1:20)
 
     ui <- miniPage(
         gadgetTitleBar("Prepare timestamps"),
@@ -39,6 +39,8 @@ prepare_timestamps <- function(construction_object) {
 
         observeEvent(input$done, {
             construction_object$data <- mutate_at(construction_object$data, not_timestamps, match.fun(input$format))
+            construction_object$timestamps_to_prepare <- not_timestamps
+            construction_object$timestamps_format <- input$format
             .construction_object <<- construction_object
 
             if(construction_object$type == "Activity") {
