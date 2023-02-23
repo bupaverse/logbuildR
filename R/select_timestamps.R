@@ -2,8 +2,8 @@
 
 #' Title
 #'
-#' @param construction_object
-#' @param single
+#' @param construction_object Construction object
+#' @param single Single timestamp per row
 
 #' @export
 #'
@@ -43,10 +43,11 @@ select_timestamps <- function(construction_object, single) {
         observeEvent(input$done, {
             construction_object$timestamps <- input$timestamp
             .construction_object <<- construction_object
-            rstudioapi::sendToConsole(glue::glue("check_timestamps(.construction_object)"))
+            # rstudioapi::sendToConsole(glue::glue("check_timestamps(.construction_object)"))
             stopApp()
         })
     }
     runGadget(ui, server, viewer = dialogViewer("Event log construction", height = 600, width = 850))
+    rstudioapi::sendToConsole(glue::glue("check_timestamps(.construction_object)"))
 
 }

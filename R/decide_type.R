@@ -20,7 +20,8 @@ decide_type <- function(construction_object) {
             column(width = 6,
             HTML("<b>Possible timestamps</b><br/>"),
             htmlOutput("possible_timestamps"))),
-            verbatimTextOutput("data")
+            verbatimTextOutput("data"),
+            actionButton("previous", "Previous")
         )
      )
 
@@ -39,19 +40,37 @@ decide_type <- function(construction_object) {
 
         output$data <- renderPrint(construction_object$data %>% glimpse())
 
+        observeEvent(input$previous, {
+            construction_object$page = "Previous"
+            .construction_object <<- construction_object
+            stopApp()
+        })
+
         observeEvent(input$done, {
             construction_object$type <- input$choice
+            construction_object$page = "Next"
             .construction_object <<- construction_object
 
-            if(input$choice == "Event") {
-                rstudioapi::sendToConsole(glue::glue("select_timestamps(.construction_object, single = T)"))
-            } else {
-                rstudioapi::sendToConsole(glue::glue("select_timestamps(.construction_object, single = F)"))
-            }
+            # if(input$choice == "Event") {
+            #     rstudioapi::sendToConsole(glue::glue("select_timestamps(.construction_object, single = T)"))
+            # } else {
+            #     rstudioapi::sendToConsole(glue::glue("select_timestamps(.construction_object, single = F)"))
+            # }
             stopApp()
         })
     }
     runGadget(ui, server, viewer = dialogViewer("Event log construction", height = 600, width = 850))
 
+    if(.construction_object$page == "Next") {
+        if(.construction_object$type == "Event") {
+            rstudioapi::sendToConsole(glue::glue("select_timestamps(.construction_object, single = T)"))
+        }
+        else {
+            rstudioapi::sendToConsole(glue::glue("select_timestamps(.construction_object, single = F)"))
+        }
+    }
+    else {
+        rstudioapi::sendToConsole(glue::glue("select_ids(.construction_object)"))
+    }
 }
 

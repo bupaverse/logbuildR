@@ -8,18 +8,21 @@
 select_ids <- function(construction_object) {
 
     ui <- miniPage(
-        gadgetTitleBar("Select case, activity and resource identifier"),
+        gadgetTitleBar("Select case, activity and resource identifier", right = miniTitleBarButton("done","Next", TRUE)),
         miniContentPanel(
             h4("Select"),
             (fluidRow(
                 column(width = 4,
-                       selectInput("case_id", label = "Case identifier(s):", choices = names(construction_object$data), multiple = T)
+                       selectizeInput("case_id", label = "Case identifier(s):", choices = names(construction_object$data), multiple = T,
+                                      options = list(placeholder = "case id(s)"))
                        ),
                 column(width = 4,
-                       selectInput("activity_id", label = "Activity identifier(s):", choices = names(construction_object$data), multiple = T)
+                       selectizeInput("activity_id", label = "Activity identifier(s):", choices = names(construction_object$data), multiple = T,
+                                      options = list(placeholder = "activity id(s)"))
                       ),
                 column(width = 4,
-                       selectInput("resource_id", label = "Resource identifier(s):", choices = names(construction_object$data), multiple = T)
+                       selectizeInput("resource_id", label = "Resource identifier(s):", choices = names(construction_object$data), multiple = T,
+                                      options = list(placeholder = "resource id(s)"))
                        )
             )),
             wellPanel(fluidRow(
@@ -38,7 +41,8 @@ select_ids <- function(construction_object) {
             )),
             textOutput("checks"),
             h4("Data preview"),
-            verbatimTextOutput("data")
+            verbatimTextOutput("data"),
+            actionButton("previous", "Previous")
 
         )
     )
@@ -153,20 +157,39 @@ select_ids <- function(construction_object) {
         }, sep = "\n")
 
 
-        output$checks <- renderText({
-            if(is.null(input$case_id)) {
-                stop("No case identifier selected")
-            } else if(is.null(input$activity_id)) {
-                stop("No activity identifier selected")
-            } else if(is.null(input$resource_id)) {
-                stop("No resource_id identifier selected")
-            } else if(input$activity_id == input$case_id) {
-                stop("Case identifier should be different from activity identifier")
-            } else if(input$resource_id == input$case_id) {
-                stop("Case identifier should be different from resource identifier")
-            } else if(input$activity_id == input$resource_id) {
-                stop("Resource identifier should be different from activity identifier")
-            }
+        output$checks <- reactive({
+            # is_null <- map(list(input$case_id, input$activity_id, input$resource_id), is.null) %>% unlist
+
+            validate(
+                need(!is.null(input$case_id), "No case identifier(s) selected"),
+                need(!is.null(input$activity_id), "No activity identifier(s) selected"),
+                need(!is.null(input$resource_id), "No resource identifier(s) selected"),
+                need(input$activity_id != input$case_id, "Case identifier should be different from activity identifier"),
+                need(input$activity_id != input$resource_id, "Resource identifier should be different from activity identifier"),
+                need(input$resource_id != input$case_id, "Case identifier should be different from resource identifier")
+            )
+        })
+
+        # output$checks <- renderText({
+        #     if(is.null(input$case_id)) {
+        #         stop("No case identifier selected")
+        #     } else if(is.null(input$activity_id)) {
+        #         stop("No activity identifier selected")
+        #     } else if(is.null(input$resource_id)) {
+        #         stop("No resource_id identifier selected")
+        #     } else if(input$activity_id == input$case_id) {
+        #         stop("Case identifier should be different from activity identifier")
+        #     } else if(input$resource_id == input$case_id) {
+        #         stop("Case identifier should be different from resource identifier")
+        #     } else if(input$activity_id == input$resource_id) {
+        #         stop("Resource identifier should be different from activity identifier")
+        #     }
+        # })
+
+        observeEvent(input$previous, {
+            construction_object$page = "Previous"
+            .construction_object <<- construction_object
+            stopApp()
         })
 
         observeEvent(input$done, {
@@ -175,12 +198,24 @@ select_ids <- function(construction_object) {
             construction_object$activity_id = input$activity_id
             construction_object$resource_id = input$resource_id
 
+            construction_object$page = "Next"
+
             .construction_object <<- construction_object
 
-            rstudioapi::sendToConsole(glue::glue("decide_type(.construction_object)"))
+            # rstudioapi::sendToConsole(glue::glue("decide_type(.construction_object)"))
             stopApp()
         })
     }
+
+    # suppressWarnings(suppressMessages(runGadget(ui, server, viewer = dialogViewer("Event log construction",  height = 600, width = 1000))))
+    # rstudioapi::sendToConsole(glue::glue("decide_type(.construction_object)"))
+
     runGadget(ui, server, viewer = dialogViewer("Event log construction", height = 800, width = 1000))
 
+    if(.construction_object$page == "Next") {
+        rstudioapi::sendToConsole(glue::glue("decide_type(.construction_object)"))
+    }
+    else {
+        rstudioapi::sendToConsole(glue::glue("build_log()"))
+    }
 }
