@@ -6,6 +6,11 @@
 \usage{
 select_timestamps(construction_object, single)
 }
+\arguments{
+\item{construction_object}{Construction object}
+
+\item{single}{Single timestamp per row}
+}
 \description{
 Title
 }

@@ -11,6 +11,8 @@ check_timestamps <- function(construction_object) {
 
     timestamps <- construction_object$timestamps
 
+    construction_object$data <- construction_object$data %>% as.data.frame()
+
     timestamp_data <- select(construction_object$data, timestamps)
 
     are_timestamps <- unlist(map(map(timestamp_data, class), ~any(.x %in% c("POSIXct","Date"))))

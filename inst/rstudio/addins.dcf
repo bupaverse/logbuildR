@@ -1,0 +1,9 @@
+Name: Build log
+Description: Build an event log
+Binding: build_log
+Interactive: true
+
+Name: Select id's
+Description: Select case, activity and resource identifiers
+Binding: select_ids
+Interactive: true
