@@ -1,6 +1,6 @@
 #' Assign activity instance identifier to events
 #'
-#' Apply heuristics to create an activity instance identifier, so that eventlog can be made.
+#' Apply heuristics to create an activity instance identifier, so that an event log can be made.
 #'
 #' @param eventlog data.frame
 #' @param case_id Case identifier
@@ -15,7 +15,7 @@
 #' @export
 #'
 assign_instance_id <- function(eventlog, case_id, activity_id, timestamp, lifecycle_id) {
-
+    ACTIVITY_STATUS_LOGBUILDR <- NULL
     current_instance <- NULL
 
     current_status <- list(open_instances = c(), last_instance = 0)

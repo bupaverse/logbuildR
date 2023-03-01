@@ -4,7 +4,7 @@
 
 #' Title
 #'
-#' @param construction_object
+#' @inheritParams select_ids
 #'
 #' @export
 #'
@@ -194,7 +194,7 @@ save_log <- function(construction_object) {
                 }
 
                 else if (input$logtype == "Activity") {
-                    log %>% to_activity() -> log
+                    log %>% to_activitylog() -> log
                 }
             }
 

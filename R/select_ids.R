@@ -1,7 +1,7 @@
 
 #' Title
 #'
-#' @param data
+#' @param construction_object [list] A construction object for log building. Access with `.construction_object` from .GlobalEnv.
 #'
 #' @export
 #'

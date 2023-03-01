@@ -1,6 +1,6 @@
 Package: logbuildR
 Type: Package
-Title: Helps the user to correctly create process data.
+Title: Helps the user to correctly create process data
 Version: 0.1.0
 Authors@R: c(person("Gert","Janssenswillen", email = "gert.janssenswillen@uhasselt.be", role = c("aut","cre")),
              person("Niels","Martin",email = "niels.martin@uhasselt.be", role = c("ctb")),
@@ -11,4 +11,4 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
-Imports: bupaR, dplyr, lubridate, magrittr, miniUI, purrr, shiny, stringr, glue, rstudioapi
+Imports: bupaR, dplyr, lubridate, magrittr, miniUI, purrr, shiny, stringr, glue, rstudioapi, rlang, shinybusy, shinyjs, DT

@@ -18,6 +18,6 @@ assign_instance_id(eventlog, case_id, activity_id, timestamp, lifecycle_id)
 \item{lifecycle_id}{Lifecycle identifier}
 }
 \description{
-Apply heuristics to create an activity instance identifier, so that eventlog can be made.
+Apply heuristics to create an activity instance identifier, so that an event log can be made.
 }
 \concept{Eventlog construction helpers}

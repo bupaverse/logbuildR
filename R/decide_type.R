@@ -1,7 +1,7 @@
 
 #' Title
 #'
-#' @param construction_object
+#' @inheritParams select_ids
 #'
 #' @export
 #'

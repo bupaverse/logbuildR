@@ -7,7 +7,7 @@
 select_ids(construction_object)
 }
 \arguments{
-\item{data}{}
+\item{construction_object}{[list] A construction object for log building. Access with `.construction_object` from .GlobalEnv.}
 }
 \description{
 Title

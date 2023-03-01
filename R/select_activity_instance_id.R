@@ -4,7 +4,7 @@
 
 #' Title
 #'
-#' @param construction_object
+#' @inheritParams select_ids
 #'
 #' @export
 #'
@@ -53,9 +53,6 @@ select_activity_instance <- function(construction_object) {
 
         observeEvent(input$done, {
 
-            # withSpinner({
-
-
             shinybusy::show_modal_spinner(spin = "circle")
             # showModal(modalDialog("Assigning instance id\'s", footer=NULL))
 
@@ -67,16 +64,6 @@ select_activity_instance <- function(construction_object) {
 
                 # rstudioapi::sendToConsole(glue::glue("save_log(.construction_object)"))
              } else {
-                # withProgress(message = "Calculating activity instance ids", value = 0, {
-                #
-                #     for(i in seq(0, 1, by = 0.01)) {
-                #         assign_instance_id(construction_object$data,
-                #                            construction_object$case_id,
-                #                            construction_object$activity_id,
-                #                            construction_object$timestamps,
-                #                            construction_object$lifecycle_id)
-                #         incProgress(i)
-                #     }
 
                 construction_object$data <- assign_instance_id(construction_object$data,
                                                                construction_object$case_id,
@@ -90,8 +77,6 @@ select_activity_instance <- function(construction_object) {
             }
 
             .construction_object <<- construction_object
-
-            # })
 
             shinybusy::remove_modal_spinner()
             # removeModal()

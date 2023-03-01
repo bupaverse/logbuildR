@@ -13,5 +13,6 @@
 
 
 
-globalVariables(c("."))
+
+globalVariables(c(".", ".construction_object"))
 NULL

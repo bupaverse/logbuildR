@@ -7,9 +7,9 @@
 select_timestamps(construction_object, single)
 }
 \arguments{
-\item{construction_object}{Construction object}
+\item{construction_object}{[list] A construction object for log building. Access with `.construction_object` from .GlobalEnv.}
 
-\item{single}{Single timestamp per row}
+\item{single}{[lgl]: Single timestamp per row if `TRUE` for event log, multiple timestamps per row if `FALSE` for activity log.}
 }
 \description{
 Title

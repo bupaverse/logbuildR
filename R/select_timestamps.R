@@ -2,8 +2,8 @@
 
 #' Title
 #'
-#' @param construction_object Construction object
-#' @param single Single timestamp per row
+#' @inheritParams select_ids
+#' @param single [lgl]: Single timestamp per row if `TRUE` for event log, multiple timestamps per row if `FALSE` for activity log.
 
 #' @export
 #'
