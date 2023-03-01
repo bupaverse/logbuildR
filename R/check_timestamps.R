@@ -11,7 +11,7 @@ check_timestamps <- function(construction_object) {
 
     timestamps <- construction_object$timestamps
 
-    # construction_object$data <- construction_object$data %>% as.data.frame()
+    construction_object$data <- construction_object$data %>% as.data.frame()
 
     timestamp_data <- select(construction_object$data, timestamps)
 

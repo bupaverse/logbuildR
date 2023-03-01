@@ -14,8 +14,7 @@ select_ids <- function(construction_object) {
             (fluidRow(
                 column(width = 4,
                        selectizeInput("case_id", label = "Case identifier(s):", choices = names(construction_object$data), multiple = T,
-                                      options = list(placeholder = "case id(s)"))
-                       ),
+                                      options = list(placeholder = "case id(s)"))                       ),
                 column(width = 4,
                        selectizeInput("activity_id", label = "Activity identifier(s):", choices = names(construction_object$data), multiple = T,
                                       options = list(placeholder = "activity id(s)"))
@@ -157,16 +156,16 @@ select_ids <- function(construction_object) {
         }, sep = "\n")
 
 
-        output$checks <- reactive({
-            # is_null <- map(list(input$case_id, input$activity_id, input$resource_id), is.null) %>% unlist
 
+        output$checks <- reactive({
             validate(
                 need(!is.null(input$case_id), "No case identifier(s) selected"),
                 need(!is.null(input$activity_id), "No activity identifier(s) selected"),
-                need(!is.null(input$resource_id), "No resource identifier(s) selected"),
-                need(input$activity_id != input$case_id, "Case identifier should be different from activity identifier"),
-                need(input$activity_id != input$resource_id, "Resource identifier should be different from activity identifier"),
-                need(input$resource_id != input$case_id, "Case identifier should be different from resource identifier")
+                need(!is.null(input$resource_id), "No resource identifier(s) selected"), #,
+                # need(!input$activity_id %in% input$case_id, "Case identifier should be different from activity identifier"),
+                need(length(intersect(input$activity_id, input$case_id)) == 0, "Case identifier should be different from activity identifier"),
+                need(length(intersect(input$activity_id, input$resource_id)) == 0, "Resource identifier should be different from activity identifier"),
+                need(length(intersect(input$resource_id, input$case_id)) == 0, "Case identifier should be different from resource identifier")
             )
         })
 

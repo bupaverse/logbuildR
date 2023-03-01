@@ -18,9 +18,10 @@ recode_lifecycles_activities <- function(construction_object) {
     incorrect_lifecycles <- lifecycles[!(lifecycles %in% allowed_lifecycle)]
 
     ui <- miniPage(
-        gadgetTitleBar("Recode timestamp columns"),
+        gadgetTitleBar("Recode timestamp columns", right = miniTitleBarButton("done","Next", TRUE)),
         miniContentPanel(
-            uiOutput("recode")
+            uiOutput("recode"),
+            actionButton("previous", "Previous")
             )
     )
 
@@ -29,9 +30,15 @@ recode_lifecycles_activities <- function(construction_object) {
 
         output$recode <- renderUI({
             map(1:length(incorrect_lifecycles), function(i) {
-                selectInput(inputId = paste0("recode", i), label = paste0("Lifecycle for ", incorrect_lifecycles[i]),
+                selectizeInput(inputId = paste0("recode", i), label = paste0("Lifecycle for ", incorrect_lifecycles[i]),
                             choices = allowed_lifecycle)
             })
+        })
+
+        observeEvent(input$previous, {
+            construction_object$page = "Previous"
+            .construction_object <<- construction_object
+            stopApp()
         })
 
         observeEvent(input$done, {
@@ -47,12 +54,16 @@ recode_lifecycles_activities <- function(construction_object) {
 
 
             .construction_object <<- construction_object
-
-            rstudioapi::sendToConsole("save_log(.construction_object)")
-
             stopApp()
         })
     }
     runGadget(ui, server, viewer = dialogViewer("Event log construction", height = 600, width = 800))
 
+    if (.construction_object$page == "Next") {
+        rstudioapi::sendToConsole("save_log(.construction_object)")
+    }
+    else {
+        rstudioapi::sendToConsole("select_timestamps(.construction_object, single = F)")
+
+    }
 }

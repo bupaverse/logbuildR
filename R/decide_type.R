@@ -8,7 +8,7 @@
 decide_type <- function(construction_object) {
 
     ui <- miniPage(
-        gadgetTitleBar("Activities or events"),
+        gadgetTitleBar("Activities or events",right = miniTitleBarButton("done","Next", TRUE)),
 
 
 
@@ -16,7 +16,9 @@ decide_type <- function(construction_object) {
             fluidRow(column(width = 6,
             radioButtons(width = "100%", "choice", "Is each row in the data an event, or an activity instance?",
                          choices = c( "Event - one relevant timestamp for each row" = "Event",
-                                      "Activity - multiple relevant timestamps for each row" = "Activity"))),
+                                      "Activity - multiple relevant timestamps for each row" = "Activity"),
+                         selected = ifelse(length(names(construction_object$data)[unlist(map(map(construction_object$data, class),
+                                                                                                                                                                                ~any(.x %in% c("POSIXct","Date"))))]) > 1, "Activity", "Event"))),
             column(width = 6,
             HTML("<b>Possible timestamps</b><br/>"),
             htmlOutput("possible_timestamps"))),
@@ -31,6 +33,9 @@ decide_type <- function(construction_object) {
         output$possible_timestamps <- renderUI({
             timestamps <- names(construction_object$data)[unlist(map(map(construction_object$data, class),
                                                                      ~any(.x %in% c("POSIXct","Date"))))]
+            timestamps2 <- names(construction_object$data[stringr::str_detect(names(construction_object$data), "time")])
+            timestamps <- append(timestamps, timestamps2)
+
             if(length(timestamps) > 0) {
                 HTML(paste(c(timestamps,"<br/>"), collapse = "<br/>"))
             } else {
