@@ -6,8 +6,10 @@ compile_script <- function(CO, constructor) {
 
 
 if(!is.null(CO$timestamps_to_prepare))  {
-    timestamp_conversion <- glue::glue(paste0("\n\t","convert_timestamps(columns = c(\'{paste(CO$timestamps_to_prepare, collapse = '\",\"')}\'), format = \'{CO$timestamps_format}\') %>%"))
-   # timestamp_conversion <- glue::glue("\n\tconvert_timestamps(columns = c(\"{paste(CO$timestamps_to_prepare, collapse = '\",\"')}\"), format = {CO$timestamps_format}) %>%\n")
+    timestamp_conversion <- paste0("\n\t", glue::glue("convert_timestamps(columns = c(\"{paste(CO$timestamps_to_prepare, collapse = '\", \"')}\"), format = {CO$timestamps_format}) %>%"))
+    # timestamp_conversion <- paste0("\n\t", "convert_timestamps(columns = c(\'", paste(CO$timestamps_to_prepare, sep = "\', "), "\'), format = ", CO$timestamps_format, ") %>%")
+
+    # timestamp_conversion <- glue::glue(paste0("convert_timestamps(columns = c(\'{paste(CO$timestamps_to_prepare, collapse = '\",\"')}\'), format = \'{CO$timestamps_format}\') %>%"))
 } else {
     timestamp_conversion <- NA
 }

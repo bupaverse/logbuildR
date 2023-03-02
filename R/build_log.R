@@ -32,9 +32,9 @@ build_log <- function() {
 
 
     # map(ls(envir = .GlobalEnv), function(x){class(get(x))}) %>%
-        # map(str_detect, "data.frame") %>%
-        # map(any) %>%
-        # unlist-> is_data_frame
+    # map(str_detect, "data.frame") %>%
+    # map(any) %>%
+    # unlist-> is_data_frame
 
     map(ls(envir = .GlobalEnv), ~rlang::inherits_any(get(.x), class = c("data.frame", "tbl_df", "tbl"))) %>%
         unlist -> is_data_frame
@@ -42,7 +42,7 @@ build_log <- function() {
 
     ls(envir = .GlobalEnv)[is_data_frame] -> datasets
     datasets %>% map(~inherits_any(get(.x), class = "log")) %>% unlist -> is_log
-    ls(envir = .GlobalEnv)[!is_log] -> datasets
+    datasets[!is_log] -> datasets
 
     server <- function(input, output, session){
 

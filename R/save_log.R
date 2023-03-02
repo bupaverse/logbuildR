@@ -51,42 +51,9 @@ save_log <- function(construction_object) {
                                      ")
             }
 
-        # if(input$type == "activitylog" & construction_object$type == "Activity") {
-        #       script <- glue::glue("activitylog(
-                                   # case_id = '{construction_object$case_id}',
-                                   # activity_id = '{construction_object$activity_id}',
-                                   # resource_id = '{construction_object$resource_id}',
-                                   # lifecycle_ids = '{construction_object$timestamps}')")
-
-        # } else if(input$type == "eventlog" & construction_object$type == "Event") {
-        #            script <- glue::glue("eventlog(
-        #                         case_id = '{construction_object$case_id}',
-        #                         activity_id = '{construction_object$activity_id}',
-        #                         timestamp = '{construction_object$timestamps}',
-        #                         resource_id = '{construction_object$resource_id}',
-        #                         lifecycle_id = '{construction_object$lifecycle_id}',
-        #                         activity_instance_id = '{construction_object$activity_instance_id}')")
-        #
-        # } else if(input$type == "eventlog" & construction_object$type == "Activity") {
-        #     script <- glue::glue("activities_to_eventlog(
-        #                                       case_id = '{construction_object$case_id}',
-        #                                       activity_id = '{construction_object$activity_id}',
-        #                                       resource_id = '{construction_object$resource_id}',
-        #                                       timestamps = '{construction_object$timestamps}')")
-
-        # } else if(input$type == "activitylog" & construction_object$type == "Event") {
-        #     script <- glue::glue("events_to_activitylog(
-        #                                      case_id = '{construction_object$case_id}',
-        #                                      activity_id = '{construction_object$activity_id}',
-        #                                      timestamp = '{construction_object$timestamps}',
-        #                                      resource_id = '{construction_object$resource_id}',
-        #                                      lifecycle_id = '{construction_object$lifecycle_id}',
-        #                                      activity_instance_id = '{construction_object$activity_instance_id}')")
-        # }
-
-
-            # return(script)
-            return(compile_script(construction_object, script))
+            script <- compile_script(construction_object, script)
+            .construction_object$script <<- script
+            return(script)
         })
 
         observeEvent(input$previous, {
@@ -194,5 +161,8 @@ save_log <- function(construction_object) {
         else {
             rstudioapi::sendToConsole(glue::glue("select_timestamps(.construction_object, single = F)"))
         }
+    }
+    else {
+        rstudioapi::sendToConsole(.construction_object$script)
     }
 }
