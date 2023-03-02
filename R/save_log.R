@@ -32,26 +32,24 @@ save_log <- function(construction_object) {
 
             validate(need(!is.null(input$objectname), "Provide a name"))
 
-                    if (construction_object$type == "Activity") {
-                        script <- glue::glue("{input$objectname} <- activitylog(.construction_object,
-                                                  case_id = '{construction_object$case_id}',
+            if (construction_object$type == "Activity") {
+                script <- glue::glue("activitylog(case_id = '{construction_object$case_id}',
                                                   activity_id = '{construction_object$activity_id}',
                                                   resource_id = '{construction_object$resource_id}',
                                                   timestamps = c({toString(paste0('\"',construction_object$timestamps, '\"'))})
-                                     )
+                                     ) -> {input$objectname}
                                      ")
-                    }
-                    else {
-                        script <- glue::glue("{input$objectname} <- eventlog(.construction_object,
-                                               case_id = '{construction_object$case_id}',
+            }
+            else {
+                script <- glue::glue("eventlog(case_id = '{construction_object$case_id}',
                                                activity_id = '{construction_object$activity_id}',
                                                activity_instance_id = '{construction_object$activity_instance_id}',
                                                lifecycle_id = '{construction_object$lifecycle_id}',
                                                timestamp = '{construction_object$timestamps}',
                                                resource_id = '{construction_object$resource_id}'
-                                     )
+                                     ) -> {input$objectname}
                                      ")
-                    }
+            }
 
         # if(input$type == "activitylog" & construction_object$type == "Activity") {
         #       script <- glue::glue("activitylog(
@@ -87,8 +85,8 @@ save_log <- function(construction_object) {
         # }
 
 
-            return(script)
-            # return(compile_script(construction_object, script))
+            # return(script)
+            return(compile_script(construction_object, script))
         })
 
         observeEvent(input$previous, {

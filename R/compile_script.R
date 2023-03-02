@@ -6,33 +6,41 @@ compile_script <- function(CO, constructor) {
 
 
 if(!is.null(CO$timestamps_to_prepare))  {
-   timestamp_conversion <- glue::glue("convert_timestamps(columns = c(\"{paste(CO$timestamps_to_prepare, collapse = '\",\"')}\"), format = {CO$timestamps_format}) %>%\n")
+    timestamp_conversion <- glue::glue(paste0("\n\t","convert_timestamps(columns = c(\'{paste(CO$timestamps_to_prepare, collapse = '\",\"')}\'), format = \'{CO$timestamps_format}\') %>%"))
+   # timestamp_conversion <- glue::glue("\n\tconvert_timestamps(columns = c(\"{paste(CO$timestamps_to_prepare, collapse = '\",\"')}\"), format = {CO$timestamps_format}) %>%\n")
 } else {
-    timestamp_conversion <- ""
+    timestamp_conversion <- NA
 }
 if(!is.null(CO$lifecycle_to_recode)) {
-    lifecycle_conversion <- paste0("rename(", paste0(paste(CO$lifecycle_recode_to, CO$lifecycle_to_recode, sep = " = "), collapse = ", "), ") %>%\n")
+    lifecycle_conversion <- paste0("\n\trename(", paste0(paste(CO$lifecycle_recode_to, paste0("\'", CO$lifecycle_to_recode, "\'"), sep = " = "), collapse = ", "), ") %>%", "\n\t")
 } else {
-    lifecycle_conversion <- ""
+    lifecycle_conversion <- NA
 }
     if(!is.null(CO$guess_activity_instance_id)) {
-        activity_instance <- glue::glue("logbuildR::assign_instance_id(   '{CO$case_id}',\n\t          '{CO$activity_id}',
-                                                     \t          '{CO$timestamps}',
-                                                     \t          '{CO$lifecycle_id}') %>%\n")
+        activity_instance <- paste0("\n\t", "logbuildR::assign_instance_id(\'", CO$case_id, "\', ", "\'", CO$activity_id, "\', ", "\'", CO$timestamps, "\', ", "\'", CO$lifecycle_id, "\') ", "%>%", "\n\t")
+        # activity_instance <- glue::glue("\n\t logbuildR::assign_instance_id('{CO$case_id}', '{CO$activity_id}','{CO$timestamps}','{CO$lifecycle_id}') %>%\n\t")
     } else {
-        activity_instance <- ""
+        activity_instance <- NA
     }
 
-if(!is.null(CO$complete_lifecycle_added)) {
-    lifecycle_add <- "mutate(lifecycle_logbuildR = 'complete') %>%\n"
-} else {
-    lifecycle_add <- ""
-}
+    if (!is.null(CO$complete_lifecycle_added)) {
+        if(CO$complete_lifecycle_added) {
+            lifecycle_add <- "\n\tmutate(lifecycle_logbuildR = 'complete') %>%"
+        } else {
+            lifecycle_add <- NA
+        }
+    }
+    else {
+        lifecycle_add <- NA
+    }
 
 glue::glue("{CO$data_name} %>%") -> data_selection
 
 
-paste(data_selection, timestamp_conversion, lifecycle_conversion, lifecycle_add, activity_instance, constructor , sep = "\t")
+items <- c(data_selection, timestamp_conversion, lifecycle_conversion, lifecycle_add, activity_instance, constructor)
+items[!is.na(items)] %>% paste()
+
+# paste(data_selection, timestamp_conversion, lifecycle_conversion, lifecycle_add, activity_instance, constructor , sep = "\n")
 
 }
 

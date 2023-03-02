@@ -51,6 +51,8 @@ recode_lifecycles_events <- function(construction_object) {
                 construction_object$data[[construction_object$lifecycle_id]] <- as.character(construction_object$data[[construction_object$lifecycle_id]])
                 construction_object$data[[construction_object$lifecycle_id]] [ construction_object$data[[construction_object$lifecycle_id]] == incorrect_lifecycles[i] ] <- input[[paste0("recode", i)]]
 
+                construction_object$lifecycle_to_recode[i] <- incorrect_lifecycles[i]
+                construction_object$lifecycle_recode_to[i] <- input[[paste0("recode",i)]]
             }
 
             .construction_object <<- construction_object
