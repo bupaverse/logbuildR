@@ -24,7 +24,7 @@ select_lifecycle <- function(construction_object) {
 
     server <- function(input, output, session){
 
-        output$data <- renderPrint(construction_object$data %>% glimpse())
+        output$data <- renderPrint(construction_object$data %>% str())
 
         # available_columns <- reactive({
         #     choices <- names(construction_object$data)

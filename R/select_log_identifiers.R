@@ -49,7 +49,7 @@ select_log_identifiers <- function(construction_object) {
 
     server <- function(input, output, session){
 
-        output$data <- renderPrint(construction_object$data %>% glimpse())
+        output$data <- renderPrint(construction_object$data %>% str())
 
         output$case_id_info <- renderText({
             if(is.null(input$case_id)) {

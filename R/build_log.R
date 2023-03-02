@@ -41,6 +41,8 @@ build_log <- function() {
 
 
     ls(envir = .GlobalEnv)[is_data_frame] -> datasets
+    datasets %>% map(~inherits_any(get(.x), class = "log")) %>% unlist -> is_log
+    ls(envir = .GlobalEnv)[!is_log] -> datasets
 
     server <- function(input, output, session){
 
@@ -55,7 +57,7 @@ build_log <- function() {
         output$dataPrint <- renderPrint({
             validate(
                 need(input$dataset != "", "No dataset found"))
-            glimpse(get(input$dataset))
+            str(head(get(input$dataset)))
 
             # if(is.null(input$dataset)) {
             #     tibble()

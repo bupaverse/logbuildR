@@ -43,7 +43,7 @@ decide_type <- function(construction_object) {
             }
         })
 
-        output$data <- renderPrint(construction_object$data %>% glimpse())
+        output$data <- renderPrint(construction_object$data %>% str())
 
         observeEvent(input$previous, {
             construction_object$page = "Previous"

@@ -23,7 +23,7 @@ select_activity_instance <- function(construction_object) {
 
     server <- function(input, output, session){
 
-        output$data <- renderPrint(construction_object$data %>% glimpse())
+        output$data <- renderPrint(construction_object$data %>% str())
 
         output$selection <- renderUI({
             if(input$is_available == "yes"){

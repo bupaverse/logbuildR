@@ -21,7 +21,7 @@ select_timestamps <- function(construction_object, single) {
 
     server <- function(input, output, session){
 
-        output$data <- renderPrint(construction_object$data %>% glimpse())
+        output$data <- renderPrint(construction_object$data %>% str())
 
         timestamps <- names(construction_object$data)[unlist(map(map(construction_object$data, class), ~any(.x %in% c("POSIXct","Date"))))]
         timestamps2 <- names(construction_object$data[stringr::str_detect(names(construction_object$data), "time")])
