@@ -65,13 +65,13 @@ select_activity_instance <- function(construction_object) {
                 # rstudioapi::sendToConsole(glue::glue("save_log(.construction_object)"))
              } else {
 
-                construction_object$data <- assign_instance_id(construction_object$data,
+                construction_object$data <- bupaR::assign_instance_id(construction_object$data,
                                                                construction_object$case_id,
                                                                construction_object$activity_id,
                                                                construction_object$timestamps,
                                                                construction_object$lifecycle_id)
                 construction_object$guess_activity_instance_id <- T
-                construction_object$activity_instance_id <- "activity_instance_logbuildR"
+                construction_object$activity_instance_id <- "activity_instance_bupaR"
 
                 # rstudioapi::sendToConsole(glue::glue("save_log(.construction_object)"))
             }

@@ -19,8 +19,8 @@ if(!is.null(CO$lifecycle_to_recode)) {
     lifecycle_conversion <- NA
 }
     if(!is.null(CO$guess_activity_instance_id)) {
-        activity_instance <- paste0("\n\t", "logbuildR::assign_instance_id(\'", CO$case_id, "\', ", "\'", CO$activity_id, "\', ", "\'", CO$timestamps, "\', ", "\'", CO$lifecycle_id, "\') ", "%>%", "\n\t")
-        # activity_instance <- glue::glue("\n\t logbuildR::assign_instance_id('{CO$case_id}', '{CO$activity_id}','{CO$timestamps}','{CO$lifecycle_id}') %>%\n\t")
+        activity_instance <- paste0("\n\t", "bupaR::assign_instance_id(\'", case_id = CO$case_id, "\', ", "\'", activity_id = CO$activity_id, "\', ", "\'", timestamp = CO$timestamps, "\', ", "\'", lifecycle_id = CO$lifecycle_id, "\') ", "%>%", "\n\t")
+        # activity_instance <- glue::glue("\n\t bupaR::assign_instance_id('case_id = {CO$case_id}', 'activity_id = {CO$activity_id}','{timestamp = CO$timestamps}','{lifecycle_id = CO$lifecycle_id}') %>%\n\t")
     } else {
         activity_instance <- NA
     }

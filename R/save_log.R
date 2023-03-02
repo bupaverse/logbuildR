@@ -11,7 +11,7 @@
 save_log <- function(construction_object) {
 
     ui <- miniPage(
-        # shinyjs::useShinyjs(),
+        rclipboardSetup(),
         gadgetTitleBar("Save log"),
         miniContentPanel(
             # radioButtons("logtype", "Saving log as: ", choices = c("Eventlog" = "eventlog", "Activitylog" = "activitylog"),
@@ -22,6 +22,7 @@ save_log <- function(construction_object) {
 
             textInput("objectname", paste("Save", tolower(construction_object$type), "log as:")),
             verbatimTextOutput("script"),
+            uiOutput("clip"),
             actionButton("previous", "Previous")
         )
     )
@@ -54,6 +55,14 @@ save_log <- function(construction_object) {
             script <- compile_script(construction_object, script)
             .construction_object$script <<- script
             return(script)
+        })
+
+        output$clip <- renderUI({
+            rclipButton(
+                inputId = "clipbtn",
+                label = "to clipboard",
+                clipText = .construction_object$script,
+                icon = icon("clipboard"))
         })
 
         observeEvent(input$previous, {
