@@ -2,7 +2,7 @@
 
 #' Title
 #'
-#' @inheritParams select_ids
+#' @inheritParams select_log_identifiers
 #' @export
 
 check_timestamps <- function(construction_object) {

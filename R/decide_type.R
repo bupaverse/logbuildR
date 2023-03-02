@@ -1,7 +1,7 @@
 
 #' Title
 #'
-#' @inheritParams select_ids
+#' @inheritParams select_log_identifiers
 #'
 #' @export
 #'
@@ -34,7 +34,7 @@ decide_type <- function(construction_object) {
             timestamps <- names(construction_object$data)[unlist(map(map(construction_object$data, class),
                                                                      ~any(.x %in% c("POSIXct","Date"))))]
             timestamps2 <- names(construction_object$data[stringr::str_detect(names(construction_object$data), "time")])
-            timestamps <- append(timestamps, timestamps2)
+            timestamps <- append(timestamps, timestamps2) %>% unique()
 
             if(length(timestamps) > 0) {
                 HTML(paste(c(timestamps,"<br/>"), collapse = "<br/>"))
@@ -75,7 +75,7 @@ decide_type <- function(construction_object) {
         }
     }
     else {
-        rstudioapi::sendToConsole(glue::glue("select_ids(.construction_object)"))
+        rstudioapi::sendToConsole(glue::glue("select_log_identifiers(.construction_object)"))
     }
 }
 

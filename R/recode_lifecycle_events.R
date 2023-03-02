@@ -4,7 +4,7 @@
 
 #' Title
 #'
-#' @inheritParams select_ids
+#' @inheritParams select_log_identifiers
 #'
 #' @export
 #'
@@ -13,7 +13,7 @@ recode_lifecycles_events <- function(construction_object) {
 
     lifecycles <- unique(construction_object$data[[construction_object$lifecycle_id]])
 
-    allowed_lifecycle <- c("schedule","assign","reassign","start","suspend","resume","abort_activity","abort_case","complete","manualskip","autoskip")
+    allowed_lifecycle <- c("start","complete", "schedule","assign","reassign","suspend","resume","abort_activity","abort_case","manualskip","autoskip")
 
     incorrect_lifecycles <- lifecycles[!(lifecycles %in% allowed_lifecycle)]
 

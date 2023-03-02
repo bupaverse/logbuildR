@@ -2,7 +2,7 @@
 
 #' Title
 #'
-#' @inheritParams select_ids
+#' @inheritParams select_log_identifiers
 #' @param single [lgl]: Single timestamp per row if `TRUE` for event log, multiple timestamps per row if `FALSE` for activity log.
 
 #' @export

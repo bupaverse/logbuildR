@@ -5,7 +5,7 @@
 #'
 #' @export
 #'
-select_ids <- function(construction_object) {
+select_log_identifiers <- function(construction_object) {
 
     ui <- miniPage(
         gadgetTitleBar("Select case, activity and resource identifier", right = miniTitleBarButton("done","Next", TRUE)),

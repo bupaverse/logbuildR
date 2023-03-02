@@ -45,25 +45,36 @@ build_log <- function() {
     server <- function(input, output, session){
 
         output$datasets <- renderUI({
+
             selectizeInput("dataset", label = "Select data:",
                            choices = datasets,
                            multiple = FALSE)
         })
 
+
         output$dataPrint <- renderPrint({
-            if(is.null(input$dataset)) {
-                tibble()
-            } else {
-                glimpse(get(input$dataset))
-            }
+            validate(
+                need(input$dataset != "", "No dataset found"))
+            glimpse(get(input$dataset))
+
+            # if(is.null(input$dataset)) {
+            #     tibble()
+            # } else {
+            #     glimpse(get(input$dataset))
+            # }
         })
 
          output$dataView <- DT::renderDataTable({
-             if(is.null(input$dataset)) {
-                 tibble()
-             } else {
-                 DT::datatable(get(input$dataset))
-             }
+
+             validate(
+                 need(input$dataset != "", "No dataset found"))
+             DT::datatable(get(input$dataset))
+
+             # if(is.null(input$dataset)) {
+             #     tibble()
+             # } else {
+             #     DT::datatable(get(input$dataset))
+             # }
          })
 
         observeEvent(input$done, {
@@ -72,7 +83,7 @@ build_log <- function() {
         })
     }
     suppressWarnings(suppressMessages(runGadget(ui, server, viewer = dialogViewer("Event log construction",  height = 600, width = 850))))
-    rstudioapi::sendToConsole(glue::glue("select_ids(.construction_object)"))
+    rstudioapi::sendToConsole(glue::glue("select_log_identifiers(.construction_object)"))
 }
 
 
