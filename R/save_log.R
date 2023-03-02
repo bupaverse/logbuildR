@@ -11,14 +11,16 @@
 save_log <- function(construction_object) {
 
     ui <- miniPage(
-        shinyjs::useShinyjs(),
+        # shinyjs::useShinyjs(),
         gadgetTitleBar("Save log"),
         miniContentPanel(
-            # radioButtons("type", "Saving log as: ", choices = c("Eventlog" = "eventlog", "Activitylog" = "activitylog")),
-            selectInput("logtype", paste0("Save log as"), #, tolower(construction_object$type), " log"),
-                        choices = c("event log", "activity log"), multiple = T,
-                        selected = ifelse(construction_object$type == "Activity", "activity log", "event log")),
-            textInput("objectname", "Name:"),
+            # radioButtons("logtype", "Saving log as: ", choices = c("Eventlog" = "eventlog", "Activitylog" = "activitylog"),
+            #              selected = ifelse(construction_object$type == "Event", "eventlog", "activitylog")),
+            # selectInput("logtype", paste0("Save log as"), #, tolower(construction_object$type), " log"),
+            #             choices = c("event log", "activity log"), multiple = T,
+            #             selected = ifelse(construction_object$type == "Activity", "activity log", "event log")),
+
+            textInput("objectname", paste("Save", tolower(construction_object$type), "log as:")),
             verbatimTextOutput("script"),
             actionButton("previous", "Previous")
         )
@@ -28,10 +30,8 @@ save_log <- function(construction_object) {
 
         output$script <- renderText({
 
-            validate(need(!is.null(input$logtype), "Choose type of log"))
+            validate(need(!is.null(input$objectname), "Provide a name"))
 
-            if (length(input$logtype) == 1) {
-                if (input$logtype == "activity log") {
                     if (construction_object$type == "Activity") {
                         script <- glue::glue("{input$objectname} <- activitylog(.construction_object,
                                                   case_id = '{construction_object$case_id}',
@@ -41,7 +41,6 @@ save_log <- function(construction_object) {
                                      )
                                      ")
                     }
-
                     else {
                         script <- glue::glue("{input$objectname} <- eventlog(.construction_object,
                                                case_id = '{construction_object$case_id}',
@@ -51,67 +50,8 @@ save_log <- function(construction_object) {
                                                timestamp = '{construction_object$timestamps}',
                                                resource_id = '{construction_object$resource_id}'
                                      )
-
-                                     {input$objectname} <- to_activitylog({input$objectname})
                                      ")
                     }
-                }
-
-                else if (input$logtype == "event log") {
-
-                    if (construction_object$type == "Event") {
-
-                        script <- glue::glue("{input$objectname} <- eventlog(.construction_object,
-                                               case_id = '{construction_object$case_id}',
-                                               activity_id = '{construction_object$activity_id}',
-                                               activity_instance_id = '{construction_object$activity_instance_id}',
-                                               lifecycle_id = '{construction_object$lifecycle_id}',
-                                               timestamp = '{construction_object$timestamps}',
-                                               resource_id = '{construction_object$resource_id}'
-                                     )
-                                     ")
-                    }
-                    else {
-                        script <- glue::glue("{input$objectname} <- activitylog(.construction_object,
-                                                  case_id = '{construction_object$case_id}',
-                                                  activity_id = '{construction_object$activity_id}',
-                                                  resource_id = '{construction_object$resource_id}',
-                                                  timestamps = c({toString(paste0('\"',construction_object$timestamps, '\"'))})
-                                     )
-
-                                     {input$objectname} <- to_eventlog({input$objectname})
-                                     ")
-                    }
-                }
-            }
-
-            # else if (length(input$logtype) > 1) {
-            else {
-
-                if (construction_object$type == "Event") {
-                    script <- glue::glue("log <- eventlog(.construction_object,
-                                               case_id = '{construction_object$case_id}',
-                                               activity_id = '{construction_object$activity_id}',
-                                               activity_instance_id = '{construction_object$activity_instance_id}',
-                                               lifecycle_id = '{construction_object$lifecycle_id}',
-                                               timestamp = '{construction_object$timestamps}',
-                                               resource_id = '{construction_object$resource_id}'
-                                     )
-                                     {input$objectname} <- list(log, to_activitylog(log))
-                                     ")
-                }
-                else {
-                    script <- glue::glue("log <- activitylog(.construction_object,
-                                               case_id = '{construction_object$case_id}',
-                                               activity_id = '{construction_object$activity_id}',
-                                               resource_id = '{construction_object$resource_id}',
-                                               timestamps = c({toString(paste0('\"',construction_object$timestamps, '\"'))})
-                                     )
-                                     {input$objectname} <- list(log, to_eventlog(log))
-                                     ")
-                }
-            }
-
 
         # if(input$type == "activitylog" & construction_object$type == "Activity") {
         #       script <- glue::glue("activitylog(
@@ -119,7 +59,7 @@ save_log <- function(construction_object) {
                                    # activity_id = '{construction_object$activity_id}',
                                    # resource_id = '{construction_object$resource_id}',
                                    # lifecycle_ids = '{construction_object$timestamps}')")
-        #
+
         # } else if(input$type == "eventlog" & construction_object$type == "Event") {
         #            script <- glue::glue("eventlog(
         #                         case_id = '{construction_object$case_id}',
@@ -135,7 +75,7 @@ save_log <- function(construction_object) {
         #                                       activity_id = '{construction_object$activity_id}',
         #                                       resource_id = '{construction_object$resource_id}',
         #                                       timestamps = '{construction_object$timestamps}')")
-        #
+
         # } else if(input$type == "activitylog" & construction_object$type == "Event") {
         #     script <- glue::glue("events_to_activitylog(
         #                                      case_id = '{construction_object$case_id}',
@@ -144,9 +84,7 @@ save_log <- function(construction_object) {
         #                                      resource_id = '{construction_object$resource_id}',
         #                                      lifecycle_id = '{construction_object$lifecycle_id}',
         #                                      activity_instance_id = '{construction_object$activity_instance_id}')")
-        #
         # }
-
 
 
             return(script)
@@ -161,42 +99,47 @@ save_log <- function(construction_object) {
 
         observeEvent(input$done, {
             .construction_object$page <<- "Next"
-            # .construction_object <<- construction_object
+            stopApp()
+        })
 
-
-            if (construction_object$type == "Activity") {
-                log <- activitylog(construction_object$data,
-                                   case_id = construction_object$case_id,
-                                   activity_id = construction_object$activity_id,
-                                   resource_id = construction_object$resource_id,
-                                   timestamps = construction_object$timestamps)
-
-                if (length(input$logtype) > 1) {
-                    log %>% to_eventlog() -> log2
-                }
-
-                else if (input$logtype == "Event") {
-                    log %>% to_eventlog() -> log
-                }
-
-            } else if(construction_object$type == "Event") {
-
-                log <- eventlog(construction_object$data,
-                                case_id = construction_object$case_id,
-                                activity_id = construction_object$activity_id,
-                                lifecycle_id = construction_object$lifecycle_id,
-                                activity_instance_id = construction_object$activity_instance_id,
-                                timestamp = construction_object$timestamps,
-                                resource_id = construction_object$resource_id)
-
-                if (length(input$logtype) > 1) {
-                    log %>% to_activitylog() -> log2
-                }
-
-                else if (input$logtype == "Activity") {
-                    log %>% to_activitylog() -> log
-                }
-            }
+        # observeEvent(input$done, {
+        #     .construction_object$page <<- "Next"
+        #     # .construction_object <<- construction_object
+        #
+        #
+        #     if (construction_object$type == "Activity") {
+        #         log <- activitylog(construction_object$data,
+        #                            case_id = construction_object$case_id,
+        #                            activity_id = construction_object$activity_id,
+        #                            resource_id = construction_object$resource_id,
+        #                            timestamps = construction_object$timestamps)
+        #
+        #         if (length(input$logtype) > 1) {
+        #             log %>% to_eventlog() -> log2
+        #         }
+        #
+        #         else if (input$logtype == "Event") {
+        #             log %>% to_eventlog() -> log
+        #         }
+        #
+        #     } else if(construction_object$type == "Event") {
+        #
+        #         log <- eventlog(construction_object$data,
+        #                         case_id = construction_object$case_id,
+        #                         activity_id = construction_object$activity_id,
+        #                         lifecycle_id = construction_object$lifecycle_id,
+        #                         activity_instance_id = construction_object$activity_instance_id,
+        #                         timestamp = construction_object$timestamps,
+        #                         resource_id = construction_object$resource_id)
+        #
+        #         if (length(input$logtype) > 1) {
+        #             log %>% to_activitylog() -> log2
+        #         }
+        #
+        #         else if (input$logtype == "Activity") {
+        #             log %>% to_activitylog() -> log
+        #         }
+        #     }
 
 
         # observeEvent(input$done, {
@@ -234,15 +177,15 @@ save_log <- function(construction_object) {
         #
         # }
 
-            if (length(input$logtype) > 1) {
-                assign(input$objectname, list(log, log2), envir = .GlobalEnv)
-                stopApp()
-            }
-            else {
-                assign(input$objectname, log, envir = .GlobalEnv)
-                stopApp()
-            }
-        })
+        #     if (length(input$logtype) > 1) {
+        #         assign(input$objectname, list(log, log2), envir = .GlobalEnv)
+        #         stopApp()
+        #     }
+        #     else {
+                # assign(input$objectname, log, envir = .GlobalEnv)
+                # stopApp()
+        #     }
+        # })
     }
     runGadget(ui, server, viewer = dialogViewer("Event log construction", height = 600, width = 800))
 

@@ -13,7 +13,7 @@ recode_lifecycles_activities <- function(construction_object) {
 
     lifecycles <- construction_object$timestamps
 
-    allowed_lifecycle <- c("schedule","assign","reassign","start","suspend","resume","abort_activity","abort_case","complete","manualskip","autoskip")
+    allowed_lifecycle <- c("start", "complete", "schedule","assign","reassign","suspend","resume","abort_activity","abort_case","manualskip","autoskip")
 
     incorrect_lifecycles <- lifecycles[!(lifecycles %in% allowed_lifecycle)]
 
