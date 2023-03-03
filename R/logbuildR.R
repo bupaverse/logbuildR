@@ -1,6 +1,6 @@
 #' @title logbuildR
 #'
-#' @description  Ipsem lorum dorum
+#' @description  Addin for interactive log building.
 #'
 #' @docType package
 #' @name logbuildR

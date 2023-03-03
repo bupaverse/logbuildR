@@ -5,8 +5,7 @@ Version: 0.1.0
 Authors@R: c(person("Gert","Janssenswillen", email = "gert.janssenswillen@uhasselt.be", role = c("aut","cre")),
              person("Niels","Martin",email = "niels.martin@uhasselt.be", role = c("ctb")),
              person("Greg","Van Houdt",email = "greg.vanhoudt@uhasselt.be", role = c("ctb")))
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Build interactively an event- or activity log
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

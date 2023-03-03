@@ -5,5 +5,5 @@
 \alias{logbuildR}
 \title{logbuildR}
 \description{
-Ipsem lorum dorum
+Addin for interactive log building.
 }
