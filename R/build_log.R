@@ -41,7 +41,7 @@ build_log <- function() {
 
 
     ls(envir = .GlobalEnv)[is_data_frame] -> datasets
-    datasets %>% map(~inherits_any(get(.x), class = "log")) %>% unlist -> is_log
+    datasets %>% map(~rlang::inherits_any(get(.x), class = "log")) %>% unlist -> is_log
     datasets[!is_log] -> datasets
 
     server <- function(input, output, session){

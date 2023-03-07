@@ -3,7 +3,6 @@
 export("%>%")
 export(assign_instance_id)
 export(build_log)
-export(build_log2)
 export(check_lifecycle_activities)
 export(check_lifecycle_events)
 export(check_timestamps)
