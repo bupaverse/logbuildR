@@ -14,7 +14,7 @@ if(!is.null(CO$timestamps_to_prepare))  {
     timestamp_conversion <- NA
 }
 if(!is.null(CO$lifecycle_to_recode)) {
-    lifecycle_conversion <- paste0("\n\trename(", paste0(paste(CO$lifecycle_recode_to, paste0("\'", CO$lifecycle_to_recode, "\'"), sep = " = "), collapse = ", "), ") %>%", "\n\t")
+    lifecycle_conversion <- paste0("\n\t", "dplyr::rename(", paste0(paste(CO$lifecycle_recode_to, paste0("\'", CO$lifecycle_to_recode, "\'"), sep = " = "), collapse = ", "), ") %>%", "\n\t")
 } else {
     lifecycle_conversion <- NA
 }
@@ -27,7 +27,7 @@ if(!is.null(CO$lifecycle_to_recode)) {
 
     if (!is.null(CO$complete_lifecycle_added)) {
         if(CO$complete_lifecycle_added) {
-            lifecycle_add <- "\n\tmutate(lifecycle_logbuildR = 'complete') %>%"
+            lifecycle_add <- "\n\tdplyr::mutate(lifecycle_logbuildR = 'complete') %>%"
         } else {
             lifecycle_add <- NA
         }

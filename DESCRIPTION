@@ -10,4 +10,4 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
-Imports: bupaR, dplyr, lubridate, magrittr, miniUI, purrr, shiny, stringr, glue, rstudioapi, rlang, shinybusy, shinyjs, DT
+Imports: bupaR, dplyr, lubridate, magrittr, miniUI, purrr, shiny, stringr, glue, rstudioapi, rlang, shinybusy, DT, rclipboard

@@ -11,7 +11,7 @@
 save_log <- function(construction_object) {
 
     ui <- miniPage(
-        rclipboardSetup(),
+        rclipboard::rclipboardSetup(),
         gadgetTitleBar("Save log"),
         miniContentPanel(
             # radioButtons("logtype", "Saving log as: ", choices = c("Eventlog" = "eventlog", "Activitylog" = "activitylog"),
@@ -34,7 +34,7 @@ save_log <- function(construction_object) {
             validate(need(!is.null(input$objectname), "Provide a name"))
 
             if (construction_object$type == "Activity") {
-                script <- glue::glue("activitylog(case_id = '{construction_object$case_id}',
+                script <- glue::glue("bupaR::activitylog(case_id = '{construction_object$case_id}',
                                                   activity_id = '{construction_object$activity_id}',
                                                   resource_id = '{construction_object$resource_id}',
                                                   timestamps = c({toString(paste0('\"',construction_object$timestamps, '\"'))})
@@ -42,7 +42,7 @@ save_log <- function(construction_object) {
                                      ")
             }
             else {
-                script <- glue::glue("eventlog(case_id = '{construction_object$case_id}',
+                script <- glue::glue("bupaR::eventlog(case_id = '{construction_object$case_id}',
                                                activity_id = '{construction_object$activity_id}',
                                                activity_instance_id = '{construction_object$activity_instance_id}',
                                                lifecycle_id = '{construction_object$lifecycle_id}',
@@ -58,7 +58,7 @@ save_log <- function(construction_object) {
         })
 
         output$clip <- renderUI({
-            rclipButton(
+            rclipboard::rclipButton(
                 inputId = "clipbtn",
                 label = "to clipboard",
                 clipText = .construction_object$script,
